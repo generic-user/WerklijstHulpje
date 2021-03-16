@@ -2,7 +2,7 @@
 # By Cattoor Bjorn
 # Doel: 
 # 1. zoek alle werklijst bestanden
-# 2. maak hiervan een backup in een acrchiefbestand
+# 2. maak hiervan een backup in een archiefbestand
 # 3. voedt de gevonden bestanden aan onze werklijsthulpje
 # 4. verwijder de bestanden op de REMOTE_LOCATION
 # 5. kopieer de nieuwe bestanden
