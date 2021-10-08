@@ -20,40 +20,40 @@ namespace WerklijstHulpje
             var workDir = Path.GetDirectoryName(TemplateFile);
             var logfile = workDir + "\\werklijsthulpje.txt";
 
-            Log.AppendLine($"We have {OriginalFiles.Count()} to convert.");
+            _ = Log.AppendLine($"We have {OriginalFiles.Count()} to convert.");
 
-            Parallel.ForEach(OriginalFiles, (originalFile) =>
-            {
-                StringBuilder itemLog = new StringBuilder(originalFile);
-                using (var destinationPackage = new ExcelPackage(new FileInfo(GetTempTemplateFilePath(TemplateFile, originalFile))))
-                using (var originalFileilePackage = new ExcelPackage(new FileInfo(originalFile)))
+            _ = Parallel.ForEach(OriginalFiles, (originalFile) =>
+              {
+                  StringBuilder itemLog = new StringBuilder(originalFile);
+                  using (var destinationPackage = new ExcelPackage(new FileInfo(GetTempTemplateFilePath(TemplateFile, originalFile))))
+                  using (var originalFileilePackage = new ExcelPackage(new FileInfo(originalFile)))
 
-                {
-                    var originWorkbook = originalFileilePackage.Workbook;
-                    var destinationWorkbook = destinationPackage.Workbook;
-                    itemLog.AppendLine($"  Converting --> {originalFileilePackage.File.Name}");
-                    foreach (var month in SheetsMonths)
-                    {
-                        var originMonthSheet = originWorkbook.Worksheets[month];
-                        var desinationMonthSheet = destinationWorkbook.Worksheets[month];
-                        itemLog.AppendLine($"   Month sheet: {month}");
-                        foreach (var range in RangesToCopyValuesFrom)
-                        {
-                            var cellsToCopy = originMonthSheet.Cells[range];
-                            var rangeLog = RangeCopyValuesBetweenSheets(cellsToCopy, desinationMonthSheet);
-                            if (!string.IsNullOrWhiteSpace(rangeLog))
-                                itemLog.Append(rangeLog);
-                        }
-                    }
+                  {
+                      var originWorkbook = originalFileilePackage.Workbook;
+                      var destinationWorkbook = destinationPackage.Workbook;
+                      _ = itemLog.AppendLine($"  Converting --> {originalFileilePackage.File.Name}");
+                      foreach (var month in SheetsMonths)
+                      {
+                          var originMonthSheet = originWorkbook.Worksheets[month];
+                          var desinationMonthSheet = destinationWorkbook.Worksheets[month];
+                          _ = itemLog.AppendLine($"   Month sheet: {month}");
+                          foreach (var range in RangesToCopyValuesFrom)
+                          {
+                              var cellsToCopy = originMonthSheet.Cells[range];
+                              var rangeLog = RangeCopyValuesBetweenSheets(cellsToCopy, desinationMonthSheet);
+                              if (!string.IsNullOrWhiteSpace(rangeLog))
+                                  _ = itemLog.Append(rangeLog);
+                          }
+                      }
 
-                    destinationPackage.Save();
-                    itemLog.AppendLine($"  Saved --> {destinationPackage.File.FullName}");
-                }
-                lock (Log)
-                {
-                    Log.Append(itemLog);
-                }
-            });
+                      destinationPackage.Save();
+                      _ = itemLog.AppendLine($"  Saved --> {destinationPackage.File.FullName}");
+                  }
+                  lock (Log)
+                  {
+                      _ = Log.Append(itemLog);
+                  }
+              });
             Console.WriteLine($"Succes: {OriginalFiles.Count()} have been processed succesfully: Logfile => {logfile}");
 
             System.IO.File.WriteAllText(logfile, Log.ToString());
@@ -80,29 +80,44 @@ namespace WerklijstHulpje
         private static void HandleParseError(IEnumerable<Error> errs)
         {
             //handle errors
+            throw new NotImplementedException();
         }
 
         private static void Main(string[] args)
         {
-            CommandLine.Parser.Default.ParseArguments<Options>(args)
+            _ = CommandLine.Parser.Default.ParseArguments<Options>(args)
          .WithParsed(RunOptions)
          .WithNotParsed(HandleParseError);
         }
 
-        private static string RangeCopyValuesBetweenSheets(ExcelRange cellsToCopy, ExcelWorksheet desinationMonthSheet)
+        private static string RangeCopyValuesBetweenSheets(ExcelRange originalValues, ExcelWorksheet newTemplateSheet)
         {
             var log = new StringBuilder();
-            foreach (var originalCell in cellsToCopy)
+            int skippedLines = 0;
+            foreach (var sourceCell in originalValues)
             {
-                var destinationCell = desinationMonthSheet.Cells[originalCell.Address];
+                var destinationCell = newTemplateSheet.Cells[sourceCell.Address];
 
-                if (!string.IsNullOrWhiteSpace(originalCell.Text) && destinationCell.Value != originalCell.Value)
+                // Hacky safety that can be removed later on, a lot of people seem to place
+                // this value in white last mont days cells.
+                if (sourceCell.Text.Equals("555") && destinationCell.Formula != "")
                 {
-                    destinationCell.Value = originalCell.Value;
-                    log.AppendLine($"    Copied Range[{originalCell.Address}]; Value[{originalCell.Text}]");
+                    _ = log.AppendLine($"Skipped value 555: Range[{sourceCell.Address}]; Formula[{sourceCell.Formula}]; Value[{sourceCell.Value}]; ");
+                    continue;
                 }
-            }
+                // Do not update what is already the same value
+                if (destinationCell.Text.Equals(sourceCell.Text))
+                {
+                    skippedLines++;
+                    continue;
+                }
 
+                // If we get here we probably want to copy value's
+                destinationCell.Value = sourceCell.Value;
+                _ = log.AppendLine($"Copied value: Range[{sourceCell.Address}]; Value[{sourceCell.Value}]; ");
+
+            }
+            _ = log.AppendLine($"SkippedCells = {skippedLines};");
             return log.ToString().Trim();
         }
 
@@ -134,10 +149,10 @@ namespace WerklijstHulpje
         {
             #region Public Properties
 
-            [Option('o', "original", Required = false, HelpText = "Input files to be processed.")]
+            [Option('o', "original", Required = true, HelpText = "Input files to be processed.")]
             public IEnumerable<string> InputFiles { get; set; }
 
-            [Option('t', "template", Required = false, HelpText = "Templatefile to be used.")]
+            [Option('t', "template", Required = true, HelpText = "Templatefile to be used.")]
             public string TemplateFilePath { get; set; }
 
             // Omitting long name, defaults to name of property, ie "--verbose"
