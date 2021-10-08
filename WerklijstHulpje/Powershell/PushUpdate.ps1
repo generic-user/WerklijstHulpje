@@ -97,10 +97,10 @@ workflow copyfilesFromRemote {
 
 
 # INPUT
- 
-$REMOTE_LOCATION = "C:\IAM-A3-8-DO\8.1.Common\Werktijdregistratie" 
-$REMOTE_TEMPLATE_FILE = "C:\IAM-A3-8-DO\8.1.Common\Werktijdregistratie\00 I.NW.06\Beheer\00 Startbestanden\2021\_template.Badge2021.xlsm"
-$APP = "F:\Source\Repos\concepts\WerklijstHulpje\WerklijstHulpje\bin\Debug\WerklijstHulpje.exe"
+#$REMOTE_LOCATION = "C:\IAM-A3-8-DO\8.1.Common\Werktijdregistratie" 
+$REMOTE_LOCATION = "C:\TEMP\mirror_server" 
+$REMOTE_TEMPLATE_FILE = "C:\Users\cwn8400\OneDrive - INFRABEL\administrative\excel\werklijsten en P30bis\werkmap aanpassingen 2021\_template.Badge2021.xlsm"
+$APP = "C:\Users\cwn8400\Documents\GitHub\WerklijstHulpje\WerklijstHulpje\bin\Debug\WerklijstHulpje.exe"
 $backups = "c:\backups\werklijsthulpje\"
 
 ################################################################################
