@@ -20,6 +20,7 @@ namespace WerklijstHulpje
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var workDir = Path.GetDirectoryName(TemplateFile);
             var logfile = workDir + "\\werklijsthulpje.txt";
+            var logfile = workDir + "\\werklijsthulpje.log.txt";
 
             _ = Log.AppendLine($"We have {OriginalFiles.Count()} to convert.");
 
