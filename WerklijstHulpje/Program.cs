@@ -102,7 +102,7 @@ namespace WerklijstHulpje
                 // this value in white last mont days cells.
                 if (sourceCell.Text.Equals("555") && destinationCell.Formula != "")
                 {
-                    _ = log.AppendLine($"Skipped value 555: Range[{sourceCell.Address}]; Formula[{sourceCell.Formula}]; Value[{sourceCell.Value}]; ");
+                    _ = log.AppendLine($"Skipped value 555: SourceCell adress[{sourceCell.Address}]; formula[{sourceCell.Formula}]; Value[{sourceCell.Value}]; ");
                     continue;
                 }
                 // Do not update what is already the same value
@@ -114,7 +114,7 @@ namespace WerklijstHulpje
 
                 // If we get here we probably want to copy value's
                 destinationCell.Value = sourceCell.Value;
-                _ = log.AppendLine($"Copied value: Range[{sourceCell.Address}]; Value[{sourceCell.Value}]; ");
+                _ = log.AppendLine($"Copied value: SourceCell adress[{sourceCell.Address}]; adress[{sourceCell.Value}]; ");
 
             }
             _ = log.AppendLine($"SkippedCells = {skippedLines};");
