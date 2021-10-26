@@ -15,11 +15,9 @@ namespace WerklijstHulpje
 
         private static void Execute(IEnumerable<string> OriginalFiles, IEnumerable<string> SheetsMonths, IEnumerable<string> RangesToCopyValuesFrom, string TemplateFile)
         {
-            StringBuilder Log = new StringBuilder($"{DateTime.Now.ToLongDateString()} | {DateTime.Now.ToLongTimeString()}" + Environment.NewLine);
             var Log = new StringBuilder($"{DateTime.Now.ToLongDateString()} | {DateTime.Now.ToLongTimeString()}" + Environment.NewLine);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var workDir = Path.GetDirectoryName(TemplateFile);
-            var logfile = workDir + "\\werklijsthulpje.txt";
             var logfile = workDir + "\\werklijsthulpje.log.txt";
 
             _ = Log.AppendLine($"We have {OriginalFiles.Count()} to convert.");
@@ -82,7 +80,6 @@ namespace WerklijstHulpje
         private static void HandleParseError(IEnumerable<Error> errs)
         {
             //handle errors
-            throw new NotImplementedException();
             Console.WriteLine("Some parsing errors occuer, please try again with valid paramaters.");
         }
 
