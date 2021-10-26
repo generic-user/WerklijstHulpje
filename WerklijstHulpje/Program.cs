@@ -16,6 +16,7 @@ namespace WerklijstHulpje
         private static void Execute(IEnumerable<string> OriginalFiles, IEnumerable<string> SheetsMonths, IEnumerable<string> RangesToCopyValuesFrom, string TemplateFile)
         {
             StringBuilder Log = new StringBuilder($"{DateTime.Now.ToLongDateString()} | {DateTime.Now.ToLongTimeString()}" + Environment.NewLine);
+            var Log = new StringBuilder($"{DateTime.Now.ToLongDateString()} | {DateTime.Now.ToLongTimeString()}" + Environment.NewLine);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var workDir = Path.GetDirectoryName(TemplateFile);
             var logfile = workDir + "\\werklijsthulpje.txt";
