@@ -127,7 +127,7 @@ namespace WerklijstHulpje
             "januari", "februari", "maart", "april", "mei", "juni",
             "juli","augustus","september", "oktober", "november", "december"};
 
-            string[] RangesToCopyValuesFrom = "U1;E3;C8:I38;N8:R38;T8:T37;V41;V44;E49;E50;E51;E52;G53;G54;D42;D43;D44;D45;D46".Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] RangesToCopyValuesFrom = "U1;E3;C8:I38;J8:M38;N8:R38;T8:T37;V41;V44;E40;E49;E50;E51;E52;G53;G54;D42;D43;D44;D45;D46".Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             //handle options
             try
