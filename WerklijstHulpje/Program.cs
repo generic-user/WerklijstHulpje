@@ -83,6 +83,7 @@ namespace WerklijstHulpje
         {
             //handle errors
             throw new NotImplementedException();
+            Console.WriteLine("Some parsing errors occuer, please try again with valid paramaters.");
         }
 
         private static void Main(string[] args)
