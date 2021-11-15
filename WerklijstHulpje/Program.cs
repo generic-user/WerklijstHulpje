@@ -108,7 +108,7 @@ namespace WerklijstHulpje
                 if (destinationCell.Text.Equals(sourceCell.Text))
                 // Do not update values are equal
                 {
-                    skippedLines++;
+                    skippedCelles++;
                     continue;
                 }
 
