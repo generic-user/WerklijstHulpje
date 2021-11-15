@@ -117,6 +117,7 @@ if ((Test-Path -Path $REMOTE_TEMPLATE_FILE) -eq $false)
 
 # Get a list of files we want to process $_.Name -match ".*(\.Badge2021\.xlsm)" -and
 $Remote_Originals = Get-ChildItem $REMOTE_LOCATION -Directory | Where-Object { $_.Name -cnotlike "00 I.NW.06" } | Get-ChildItem -File -Recurse | Where-Object { $_.Name -match ".*(\.Badge2021\.xlsm)$"  } 
+Write-Host "Server adress is: $REMOTE_LOCATION" -InformationAction Continue 
 
 # Show file's found
 $OriginalsCount = $Remote_Originals.Count
@@ -141,8 +142,8 @@ try {
     $argument_t = " -t ""$Local_TemplateFilePath"""
     $argument_o = " -o "
 
-    # Copy Files in parralel from remote destination
-    Write-Host "Copying files from remote ..."
+    # Copy Files in from remote destination
+    Write-Warning "Copying files from remote ..." -WarningAction Inquire
     copyfilesFromRemote -files $Remote_Originals -destination $WorkDir.FullName -ErrorAction Stop
     Write-Host ( "  ok => " + $WorkDir.FullName)
 
@@ -153,7 +154,7 @@ try {
         $argument_o +=  """" + $local_FilePath + """ "
     }
 
-    Write-Host ("Starting application => " + $APPName)
+    Write-Warning ("Starting application => " + $APPName) -WarningAction Inquire
     $ensemble = ($APP + $argument_t + $argument_o)
     # start the application
     $succes = Invoke-Expression $ensemble
@@ -161,7 +162,8 @@ try {
         {Throw $succes}
     else { $succes }
 
-    Write-Host ("Copying files to remote ...")
+    Write-Warning "Copying files to remote ..." -WarningAction Inquire
+
     # Move result to remote server
     foreach ($file in $Remote_Originals){
         $local_FilePath = $WorkDir.FullName + "\" + $file.Name
@@ -169,7 +171,7 @@ try {
         Move-Item -Path $local_FilePathResult -Destination $file.FullName -Force -ErrorAction Stop
     }
 
-    Write-Host ("  ok => " + $REMOTE_LOCATION)
+    Write-Host ("  new files copied to destination => " + $REMOTE_LOCATION)
 
     # Zip original files, move into backup-folder
     if ((Test-Path $backups -PathType Container) -eq $false )
@@ -184,11 +186,12 @@ try {
 }
 catch {Throw}
 finally {
-   Remove-Folder $WorkDir 
-   Write-Host "Temporary working-directory => Removed"
+    # Clean up after ourself
+    Remove-Folder $WorkDir 
+    Write-Host "Cleaning up the mess I made here: $WorkDir => Removed"
 }
 
- Write-Host "We are done here, thank you for flying with Werklijsthulpje!"
+ Write-Host "We are done here, thank you for using with Werklijsthulpje!"
 
 
 
