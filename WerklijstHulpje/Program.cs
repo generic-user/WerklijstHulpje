@@ -92,8 +92,8 @@ namespace WerklijstHulpje
 
         private static string RangeCopyValuesBetweenSheets(ExcelRange originalValues, ExcelWorksheet newTemplateSheet)
         {
-            var log = new StringBuilder();
-            int skippedLines = 0;
+            var log = new StringBuilder($"--> Sheet[{newTemplateSheet.Name}] Range [{originalValues.Address}] <--\r\n");
+            int skippedCelles = 0;
             foreach (var sourceCell in originalValues)
             {
                 var destinationCell = newTemplateSheet.Cells[sourceCell.Address];
