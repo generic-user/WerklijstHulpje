@@ -80,7 +80,7 @@ namespace WerklijstHulpje
         private static void HandleParseError(IEnumerable<Error> errs)
         {
             //handle errors
-            Console.WriteLine("Some parsing errors occuer, please try again with valid paramaters.");
+            Console.WriteLine("Some parsing errors occurred, please try again with valid parameters.");
         }
 
         private static void Main(string[] args)
@@ -98,15 +98,15 @@ namespace WerklijstHulpje
             {
                 var destinationCell = newTemplateSheet.Cells[sourceCell.Address];
 
-                // Hacky safety that can be removed later on, a lot of people seem to place
-                // this value in white last mont days cells.
+                // fix: Hack -> safety that can be removed later on, a lot of people seem to place
+                // this value in white last month days cells.
                 if (sourceCell.Text.Equals("555") && destinationCell.Formula != "")
                 {
-                    _ = log.AppendLine($"Skipped value 555: SourceCell adress[{sourceCell.Address}]; formula[{sourceCell.Formula}]; Value[{sourceCell.Value}]; ");
+                    _ = log.AppendLine($"   |--> Skipped value 555: SourceCell address[{sourceCell.Address}]; formula[{sourceCell.Formula}]; value[{sourceCell.Value}]; ");
                     continue;
                 }
-                // Do not update what is already the same value
                 if (destinationCell.Text.Equals(sourceCell.Text))
+                // Do not update values are equal
                 {
                     skippedLines++;
                     continue;
@@ -117,8 +117,8 @@ namespace WerklijstHulpje
                 _ = log.AppendLine($"Copied value: SourceCell adress[{sourceCell.Address}]; adress[{sourceCell.Value}]; ");
 
             }
-            _ = log.AppendLine($"SkippedCells = {skippedLines};");
-            return log.ToString().Trim();
+            _ = log.AppendLine($"   |--> Total number of skippedCells = {skippedCelles};");
+            return log.ToString();
         }
 
         private static void RunOptions(Options opts)
@@ -137,7 +137,7 @@ namespace WerklijstHulpje
             catch (Exception ex)
             {
                 // throw;
-                Console.Write($"Failed: {ex.Message}");
+                Console.Write($"Failed: {ex.GetType()} {ex.Message}");
             }
         }
 
@@ -152,7 +152,7 @@ namespace WerklijstHulpje
             [Option('o', "original", Required = true, HelpText = "Input files to be processed.")]
             public IEnumerable<string> InputFiles { get; set; }
 
-            [Option('t', "template", Required = true, HelpText = "Templatefile to be used.")]
+            [Option('t', "template", Required = true, HelpText = "Template-file to be used.")]
             public string TemplateFilePath { get; set; }
 
             // Omitting long name, defaults to name of property, ie "--verbose"
