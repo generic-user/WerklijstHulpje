@@ -19,19 +19,29 @@ namespace WerklijstHulpje
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var workDir = Path.GetDirectoryName(TemplateFile);
             var logfile = workDir + "\\werklijsthulpje.log.txt";
+            var isSucces = false;
 
             _ = Log.AppendLine($"We have {OriginalFiles.Count()} to convert.");
-
-            _ = Parallel.ForEach(OriginalFiles, (originalFile) =>
+            try
+            {
+                _ = Parallel.ForEach(OriginalFiles, (originalFile) =>
               {
-                  StringBuilder itemLog = new StringBuilder(originalFile);
-                  using (var destinationPackage = new ExcelPackage(new FileInfo(GetTempTemplateFilePath(TemplateFile, originalFile))))
-                  using (var originalFileilePackage = new ExcelPackage(new FileInfo(originalFile)))
+                  // Just to be save: Throw error when user assumes an XLS-file is OK.
+                  if (originalFile.EndsWith("XLS", StringComparison.CurrentCultureIgnoreCase))
+                      throw new Exception("Only XLSM files are supported!");
+
+                  var itemLog = new StringBuilder(originalFile);
+
+                  // The original excel-file with values typed in by the user.
+                  using (var originalFilePackage = new ExcelPackage(new FileInfo(originalFile)))
+                  using (var destinationFilePackage = new ExcelPackage(new FileInfo(GetTempTemplateFilePath(TemplateFile, originalFile))))
+
 
                   {
-                      var originWorkbook = originalFileilePackage.Workbook;
-                      var destinationWorkbook = destinationPackage.Workbook;
-                      _ = itemLog.AppendLine($"  Converting --> {originalFileilePackage.File.Name}");
+                      var originWorkbook = originalFilePackage.Workbook;
+                      var destinationWorkbook = destinationFilePackage.Workbook;
+                      
+                      _ = itemLog.AppendLine($"  Converting --> {originalFilePackage.File.Name}");
                       foreach (var month in SheetsMonths)
                       {
                           var originMonthSheet = originWorkbook.Worksheets[month];
@@ -46,15 +56,28 @@ namespace WerklijstHulpje
                           }
                       }
 
-                      destinationPackage.Save();
-                      _ = itemLog.AppendLine($"  Saved --> {destinationPackage.File.FullName}");
+                      destinationFilePackage.Save();
+                      _ = itemLog.AppendLine($"  Saved --> {destinationFilePackage.File.FullName}");
                   }
+
                   lock (Log)
                   {
                       _ = Log.Append(itemLog);
                   }
               });
-            Console.WriteLine($"Succes: {OriginalFiles.Count()} have been processed succesfully: Logfile => {logfile}");
+                isSucces = true;
+            }
+            catch (Exception exception)
+            {
+                _ = Log.AppendLine($"Failed to read file --> {exception.Message} --> {exception.InnerException?.Message}");
+
+            }
+
+            var logString = Log.ToString();
+            if (isSucces)
+                Console.WriteLine($"Success: {OriginalFiles.Count()} have been processed successfully: Log-file => {logfile}");
+            else
+                Console.WriteLine($"Process failed: Log-file => {logfile}");
 
             System.IO.File.WriteAllText(logfile, Log.ToString());
         }
@@ -105,16 +128,38 @@ namespace WerklijstHulpje
                     _ = log.AppendLine($"   |--> Skipped value 555: SourceCell address[{sourceCell.Address}]; formula[{sourceCell.Formula}]; value[{sourceCell.Value}]; ");
                     continue;
                 }
-                if (destinationCell.Text.Equals(sourceCell.Text))
                 // Do not update values are equal
+                if (destinationCell.Text.Equals(sourceCell.Text, StringComparison.CurrentCultureIgnoreCase))
                 {
                     skippedCelles++;
                     continue;
                 }
 
-                // If we get here we probably want to copy value's
-                destinationCell.Value = sourceCell.Value;
-                _ = log.AppendLine($"Copied value: SourceCell adress[{sourceCell.Address}]; adress[{sourceCell.Value}]; ");
+                // This mitigates polluting the destination excel with empty string values from source file.
+                if (sourceCell.Formula == "" && string.IsNullOrWhiteSpace(sourceCell.Text))
+                {
+                    destinationCell.Value = "";
+                    _ = log.AppendLine($"   |--> Set value: SourceCell address[{sourceCell.Address}]; to empty string; ");
+                    continue;
+                }
+
+                // Soft set of value, formula is not broken.
+                if (destinationCell.Formula == "" && !string.IsNullOrWhiteSpace(sourceCell.Text))
+                {
+                    destinationCell.Value = sourceCell.Value;
+                    _ = log.AppendLine($"   |--> Copied value: SourceCell address[{sourceCell.Address}]; value[{sourceCell.Value}]; SOFT SET destination: no formula.");
+                    continue;
+                }
+
+                // Hard set destination, break formula.
+                if (string.IsNullOrWhiteSpace(sourceCell.Formula) && !string.IsNullOrWhiteSpace(sourceCell.Text))
+                {
+                    destinationCell.Value = sourceCell.Value;
+                    _ = log.AppendLine($"   |--> Set value: SourceCell address[{sourceCell.Address}]; value[{sourceCell.Value}]; HARD SET destination: formula broken!");
+                }
+
+                // No valid reason to copy values, so skip.
+                skippedCelles++;
 
             }
             _ = log.AppendLine($"   |--> Total number of skippedCells = {skippedCelles};");
@@ -123,16 +168,24 @@ namespace WerklijstHulpje
 
         private static void RunOptions(Options opts)
         {
-            string[] SheetsMonths = new string[] {
-            "januari", "februari", "maart", "april", "mei", "juni",
-            "juli","augustus","september", "oktober", "november", "december"};
+            var SheetsMonths = Properties.Settings.Default.SheetMonths;
 
-            string[] RangesToCopyValuesFrom = "U1;E3;C8:I38;J8:M38;N8:R38;T8:T37;V41;V44;E40;E49;E50;E51;E52;G53;G54;D42;D43;D44;D45;D46".Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var RangesToCopyValuesFrom = Properties.Settings.Default.Ranges;
 
             //handle options
             try
             {
-                Execute(opts.InputFiles, SheetsMonths, RangesToCopyValuesFrom, opts.TemplateFilePath);
+                if (!File.Exists(opts.TemplateFilePath))
+                    throw new FileNotFoundException($"File not found:{opts.TemplateFilePath}");
+                foreach (var f in opts.InputFiles)
+                    if (!File.Exists(f))
+                        throw new FileNotFoundException($"File not found:{f}");
+
+                Execute(
+                    OriginalFiles: opts.InputFiles,
+                    SheetsMonths: SheetsMonths.Cast<string>(),
+                    RangesToCopyValuesFrom: RangesToCopyValuesFrom.Cast<string>(),
+                    TemplateFile: opts.TemplateFilePath);
             }
             catch (Exception ex)
             {
