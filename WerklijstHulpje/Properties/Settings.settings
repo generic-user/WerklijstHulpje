@@ -1,0 +1,48 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WerklijstHulpje.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Ranges" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;U1&lt;/string&gt;
+  &lt;string&gt;E3&lt;/string&gt;
+  &lt;string&gt;C8:I38&lt;/string&gt;
+  &lt;string&gt;J8:M38&lt;/string&gt;
+  &lt;string&gt;N8:R38&lt;/string&gt;
+  &lt;string&gt;T8:T37&lt;/string&gt;
+  &lt;string&gt;V41&lt;/string&gt;
+  &lt;string&gt;V44&lt;/string&gt;
+  &lt;string&gt;E40&lt;/string&gt;
+  &lt;string&gt;E49&lt;/string&gt;
+  &lt;string&gt;E50&lt;/string&gt;
+  &lt;string&gt;E51&lt;/string&gt;
+  &lt;string&gt;E52&lt;/string&gt;
+  &lt;string&gt;G53&lt;/string&gt;
+  &lt;string&gt;G54&lt;/string&gt;
+  &lt;string&gt;D42&lt;/string&gt;
+  &lt;string&gt;D43&lt;/string&gt;
+  &lt;string&gt;D44&lt;/string&gt;
+  &lt;string&gt;D45&lt;/string&gt;
+  &lt;string&gt;D46&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="SheetMonths" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+  &lt;string&gt;januari&lt;/string&gt;
+  &lt;string&gt;februari&lt;/string&gt;
+  &lt;string&gt;maart&lt;/string&gt;
+  &lt;string&gt;april&lt;/string&gt;
+  &lt;string&gt;mei&lt;/string&gt;
+  &lt;string&gt;juni&lt;/string&gt;
+  &lt;string&gt;juli&lt;/string&gt;
+  &lt;string&gt;augustus&lt;/string&gt;
+  &lt;string&gt;september&lt;/string&gt;
+  &lt;string&gt;oktober&lt;/string&gt;
+  &lt;string&gt;november&lt;/string&gt;
+  &lt;string&gt;december&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
