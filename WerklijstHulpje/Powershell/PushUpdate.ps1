@@ -147,9 +147,8 @@ $ROBOCOPY_ARGUMENTS = @('/tee', '/log:C:\temp\copy-log.txt', '/mt', '/z', '/xd',
 
 # Explanation pattern [voornaam].[achternaam].Badge[YYYY].xlsm
 $year = '2021'
+Write-Host "Het ingestelde jaartal= $year"
 $FILE_FILTER_STRING = '*.*.Badge' + $year + '.xlsm'
-
-$FILE_FILTER_STRING = "*.*.Badge2021.xlsm"
 Write-Host "Het filter om de badgebestanden te zoeken = $FILE_FILTER_STRING"
 ################################################################################
 ################################################################################
