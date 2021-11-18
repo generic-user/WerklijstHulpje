@@ -141,7 +141,8 @@ $backups = "c:\backups\werklijsthulpje\"
 $ROBOCOPY_ARGUMENTS = @('/tee', '/log:C:\temp\copy-log.txt', '/mt', '/z', '/xd', '"00 I.NW.06"', '"00 Pensioen"', '"bck"', '"bak"', '/xf', '"*~$*"', '"bck"', '"bak"', '/lev:2', '/s', '/v', '/mir'; '/dcopy:T', '/XA:H', '/W:5')
 
 # Explanation pattern [voornaam].[achternaam].Badge[YYYY].xlsm
-$FILE_FILTER_STRING = '*.*.Badge2021.xlsm'
+$year = '2021'
+$FILE_FILTER_STRING = '*.*.Badge' + $year + '.xlsm'
 
 ################################################################################
 ################################################################################
