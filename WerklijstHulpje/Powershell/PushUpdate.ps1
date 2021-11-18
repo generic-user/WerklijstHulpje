@@ -133,8 +133,8 @@ $MIRROR_SERVER_PATH = "C:\TEMP\mirror_server"
 Write-Host "Lokale copy van server = $MIRROR_SERVER_PATH"
 
 # Path to the template you want to use
-$REMOTE_TEMPLATE_FILE = "C:\Users\cwn8400\OneDrive - INFRABEL\administrative\excel\werklijsten en P30bis\werkmap aanpassingen 2021\_template.Badge2021_01.xlsm"
-Write-Host "Gebruikte template-file = $REMOTE_TEMPLATE_FILE"
+$REMOTE_TEMPLATE_FILE = "C:\Users\cwn8400\OneDrive - INFRABEL\administrative\excel\werklijsten en P30bis\werkmap aanpassingen 2021\_template.Badge2021.xlsm"
+
 # Path to where the executable of the C# application is
 $APP = "C:\Users\cwn8400\Documents\GitHub\WerklijstHulpje\WerklijstHulpje\bin\x64\Release\WerklijstHulpje.exe"
 Write-Host "Het pad naar werklijsthulpje.exe = $APP"
