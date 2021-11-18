@@ -1,12 +1,14 @@
 ﻿# INFO
-# By Cattoor Bjorn
+# By Cattoor Bjorn (bjorn.cattoor@infrabel.be)
+# GITHUB https://github.com/generic-user/WerklijstHulpje
+# Download releases: https://github.com/generic-user/WerklijstHulpje/releases
 # Doel: 
-# 1. zoek alle werklijst bestanden
-# 2. maak hiervan een backup in een archiefbestand
-# 3. voedt de gevonden bestanden aan onze werklijsthulpje
-# 4. verwijder de bestanden op de REMOTE_LOCATION
-# 5. kopieer de nieuwe bestanden
-# Funties compleet 6januarie 2021. 
+# 1. Maak een lokale copy van de server (MIRROR)
+# 2. voedt de gevonden bestanden aan onze werklijsthulpje.exe
+# 3. maak van de gedownloade badge bestanden een backup in een archiefbestand
+# 4. verwijder alle tijdelijke bestanden
+# 5. upload de gewijzigde bestanden terug naar de REMOTE_LOCATION (mirror)
+# Funtie-compleet 18 november 2021. 
 
 # functions
 
