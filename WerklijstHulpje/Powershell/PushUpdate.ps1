@@ -124,17 +124,22 @@ function Start-Executable {
 $REMOTE_LOCATION = "X:\I-AM.A3\8.DRAWING_OFFICE\8.1.Common\Werktijdregistratie" 
 # This is the path to the server containing the user files (For DEBUGGING)
 # $REMOTE_LOCATION = "C:\TEMP\fake_server"
+Write-Host "Server lokatie = $REMOTE_LOCATION"
+
 # Where do you want to mirror the server files 2 --> Uses robocopy to make a mirror.
 $MIRROR_SERVER_PATH = "C:\TEMP\mirror_server" 
+Write-Host "Lokale copy van server = $MIRROR_SERVER_PATH"
 
 # Path to the template you want to use
 $REMOTE_TEMPLATE_FILE = "C:\Users\cwn8400\OneDrive - INFRABEL\administrative\excel\werklijsten en P30bis\werkmap aanpassingen 2021\_template.Badge2021_01.xlsm"
-
+Write-Host "Gebruikte template-file = $REMOTE_TEMPLATE_FILE"
 # Path to where the executable of the C# application is
 $APP = "C:\Users\cwn8400\Documents\GitHub\WerklijstHulpje\WerklijstHulpje\bin\x64\Release\WerklijstHulpje.exe"
+Write-Host "Het pad naar werklijsthulpje.exe = $APP"
 
 # Where do you want to write your backups to?
 $backups = "c:\backups\werklijsthulpje\"
+Write-Host "Het pad naar de lokale backups folder = $backups"
 
 # RoboCOPY arguments quick reference: extra arguments: /v (verbose) /l (debug only)
 # INFO: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy
@@ -144,6 +149,8 @@ $ROBOCOPY_ARGUMENTS = @('/tee', '/log:C:\temp\copy-log.txt', '/mt', '/z', '/xd',
 $year = '2021'
 $FILE_FILTER_STRING = '*.*.Badge' + $year + '.xlsm'
 
+$FILE_FILTER_STRING = "*.*.Badge2021.xlsm"
+Write-Host "Het filter om de badgebestanden te zoeken = $FILE_FILTER_STRING"
 ################################################################################
 ################################################################################
 ################################################################################
@@ -193,7 +200,7 @@ switch ($decision) {
         # Get a list of files we want to process $_.Name -match ".*(\.Badge2021\.xlsm)" -and
         $Remote_Originals = Get-ChildItem $MIRROR_SERVER_PATH -Directory | Where-Object { $_.Name -cnotlike "00 I.NW.06" -and $_.Name -cnotlike "bck" } | Get-ChildItem -File | Where-Object { $_.Name -match ".*(\.Badge2021\.xlsm)$" } 
 
-        Write-Host "Server adress is: $MIRROR_SERVER_PATH" -InformationAction Continue 
+        Write-Host "Local server adress is: $MIRROR_SERVER_PATH" -InformationAction Continue 
 
         # Show file's found
         $OriginalsCount = $Remote_Originals.Count
